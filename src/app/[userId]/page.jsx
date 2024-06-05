@@ -1,16 +1,17 @@
 "use client"
 
-import Link from "next/link";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-const Home = () => {
-  const [data, setData] = useState([]);
+const userDetails = ({params}) => {
+    // console.log("params:", params);
+    const {userId} = params
+      const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const getData = async () => {
     try {
       setLoading(true)
-      const res = await fetch("http://localhost:3000/api/users");
+      const res = await fetch(`http://localhost:3000/api/users/${userId}`);
       // console.log("res:", res);
       const result = await res.json();
       // console.log("typeof result:", typeof result);
@@ -30,16 +31,19 @@ const Home = () => {
   }, [])
   return (
     <main className="px-5 bg-slate-800 text-slate-300 h-screen">
-      <h1 className="text-4xl text-center py-5">Users</h1>
+      <h1 className="text-4xl text-center py-5">User Details</h1>
       <ol className="list list-inside list-decimal">
         {loading && <p>Loading...</p>}
         {errorMsg && <p>{errorMsg}</p>}
-        {data.map(user=>(
-          <li key={user._id} > <Link href={`/${user._id}`}>Username: {user.username} Email: {user.email}</Link> </li>
-        ))}
+        {!loading && !errorMsg && (
+          <div>
+            <p>Username: {data.username}</p>
+            <p>Email: {data.email}</p>
+          </div>
+        )}
       </ol>
     </main>
-  )
+  );
 }
 
-export default Home
+export default userDetails
