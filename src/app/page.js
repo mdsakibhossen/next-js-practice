@@ -1,43 +1,19 @@
-"use client"
-
-import Link from "next/link";
-import { useEffect, useState } from "react"
+"use client";
+import UserForm from '@/components/userForm/UserForm'
+import UserList from '@/components/userList/UserList'
+import { useState } from 'react';
 
 const Home = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const getData = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch("http://localhost:3000/api/users");
-      // console.log("res:", res);
-      const result = await res.json();
-      // console.log("typeof result:", typeof result);
-      // console.log("result:", result);
-      setData(result)
-      setLoading(false)
-      setErrorMsg("")
-    } catch (error) {
-      // console.log("Custom Error: ",error);
-      setData([])
-      setLoading(false)
-      setErrorMsg(error.message)
-    }
-  }
-  useEffect(() => {
-    getData()
-  }, [])
+  // States
+  const [message, setMessage] = useState({ text: "", isErr: false,isDelete:false });
   return (
-    <main className="px-5 bg-slate-800 text-slate-300 h-screen">
-      <h1 className="text-4xl text-center py-5">Users</h1>
-      <ol className="list list-inside list-decimal">
-        {loading && <p>Loading...</p>}
-        {errorMsg && <p>{errorMsg}</p>}
-        {data.map(user=>(
-          <li key={user._id} > <Link href={`/${user._id}`}>Username: {user.username} Email: {user.email}</Link> </li>
-        ))}
-      </ol>
+    <main className='min-h-screen bg-slate-800 text-white'>
+      <div className="container mx-auto p-5 flex flex-col lg:flex-row gap-5">
+        <div className="w-full lg:w-2/5 lg:order-2"><UserForm message={message} setMessage={setMessage} /></div>
+        <div className="w-full lg:w-3/5 lg:order-1">
+          <UserList message={message} setMessage={setMessage} />
+        </div>
+      </div>
     </main>
   )
 }
