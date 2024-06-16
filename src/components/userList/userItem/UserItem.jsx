@@ -1,6 +1,5 @@
 "use client";
-import { editUser } from "@/lib/features/users/usersSlice";
-import { useDeleteUserMutation } from "@/services/user";
+import { editUser } from "@/redux/features/users/usersSlice";
 import { FaRegEdit } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
 import { useDispatch } from "react-redux";

@@ -15,7 +15,7 @@ export const userApi = createApi({
                 {
                     url: "/users",
                     method:"POST",
-                    body: user
+                    body: user // Don't need to stringify. Because RTK Query Done The Job Underhood... 
                 }
             ),
             invalidatesTags: ["user"]
@@ -25,7 +25,7 @@ export const userApi = createApi({
                 {
                     url: `/users/${id}`,
                     method:"PUT",
-                    body: user
+                    body: user // Don't need to stringify. Because RTK Query Done The Job Underhood... 
                 }
             ),
             invalidatesTags: ["user"]
