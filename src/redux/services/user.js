@@ -7,7 +7,7 @@ export const userApi = createApi({
     tagTypes: ["user"],
     endpoints: (builder) => ({
         getUsers: builder.query({
-            query: () => "/users",
+            query: ({ currentPage, currentLimit }) => `/users?page=${currentPage}&limit=${currentLimit}`,
             providesTags: ["user"]
         }),
         addUser: builder.mutation({

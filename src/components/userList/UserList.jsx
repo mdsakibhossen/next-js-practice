@@ -1,10 +1,11 @@
 "use client";
-import { useDeleteUserMutation, useGetUsersQuery } from "@/redux/services/user";
+import { useDeleteUserMutation } from "@/redux/services/user";
 import UserItem from "./userItem/UserItem";
 import { useEffect } from "react";
 
-const UserList = ({message,setMessage}) => {
-  const { data: users = [], isLoading, error } = useGetUsersQuery();
+const UserList = ({ message, setMessage, data, isLoading, error }) => {
+ 
+
   const [
     deleteUser,
     {
@@ -16,53 +17,51 @@ const UserList = ({message,setMessage}) => {
     },
   ] = useDeleteUserMutation();
 
-  useEffect(()=>{
-   if (isDeleting) {
-     setMessage({
-       text: "Deleting...",
-       isErr: false,
-       isDelete: true,
-     });
-   }
-   if (isDeleteSuccess) {
-     setMessage({
-       text: deleteMessage?.message || "User deleted successfully.",
-       isErr: false,
-       isDelete: true,
-     });
-   } else if (isDeleteError) {
-     setMessage({
-       text: deleteError?.data?.message || "Failed To Delete.",
-       isErr: true,
-       isDelete: true,
-     });
-   }
-  },[isDeleting,isDeleteSuccess,isDeleteError])
+  useEffect(() => {
+    if (isDeleting) {
+      setMessage({
+        text: "Deleting...",
+        isErr: false,
+        isDelete: true,
+      });
+    }
+    if (isDeleteSuccess) {
+      setMessage({
+        text: deleteMessage?.message || "User deleted successfully.",
+        isErr: false,
+        isDelete: true,
+      });
+    } else if (isDeleteError) {
+      setMessage({
+        text: deleteError?.data?.message || "Failed To Delete.",
+        isErr: true,
+        isDelete: true,
+      });
+    }
+  }, [isDeleting, isDeleteSuccess, isDeleteError]);
 
-    const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (userId) => {
+    await deleteUser(userId);
 
-
-      await deleteUser(userId);
-   
-      // console.log("message:",message);
-      // try {
-      //   // Perform deletion
-      //   await deleteUser(userId);
-      //   // Update message state on successful deletion
-      //   setMessage({
-      //     text: "User deleted successfully.",
-      //     isErr: false,
-      //     isDelete:true
-      //   });
-      // } catch (error) {
-      //   // Handle deletion error
-      //   setMessage({
-      //     text: "Failed to delete user.",
-      //     isErr: true,
-      //     isDelete: true,
-      //   });
-      // }
-    };
+    // console.log("message:",message);
+    // try {
+    //   // Perform deletion
+    //   await deleteUser(userId);
+    //   // Update message state on successful deletion
+    //   setMessage({
+    //     text: "User deleted successfully.",
+    //     isErr: false,
+    //     isDelete:true
+    //   });
+    // } catch (error) {
+    //   // Handle deletion error
+    //   setMessage({
+    //     text: "Failed to delete user.",
+    //     isErr: true,
+    //     isDelete: true,
+    //   });
+    // }
+  };
 
   // if(error){
   //   return <h2 className="text-xl text-red-400 text-center">{error.message}</h2>
@@ -77,13 +76,7 @@ const UserList = ({message,setMessage}) => {
       <h2 className="text-3xl text-center text-green-400 mb-3">Users</h2>
 
       {message.text && message.isDelete && (
-        <small
-          className={
-            message.isErr
-              ? "text-red-400"
-              : "text-green-400"
-          }
-        >
+        <small className={message.isErr ? "text-red-400" : "text-green-400"}>
           {message.text}
         </small>
       )}
@@ -94,7 +87,7 @@ const UserList = ({message,setMessage}) => {
         </h2>
       ) : isLoading ? (
         <h2 className="text-xl text-center">Loading ...</h2>
-      ) : users.length > 0 ? (
+      ) : data?.users.length > 0 ? (
         <table className="border border-slate-500 w-full mt-3 text-center">
           <thead>
             <tr>
@@ -116,7 +109,7 @@ const UserList = ({message,setMessage}) => {
             </tr>
           </thead>
           <tbody>
-            {users?.map((user) => (
+            {data?.users?.map((user) => (
               <UserItem
                 key={user._id}
                 user={user}
